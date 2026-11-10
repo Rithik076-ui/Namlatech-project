@@ -1,7 +1,3 @@
-/* edithotel.js - one page for both "Add Hotel" and "Edit Hotel".
-   edithotel.html            -> add mode
-   edithotel.html?id=<id>    -> edit mode (fields are pre-filled) */
-
 const form = document.getElementById('hotel-form');
 const heading = document.getElementById('page-heading');
 const notFound = document.getElementById('not-found');
@@ -14,15 +10,13 @@ const lonInput = document.getElementById('longitude');
 const priceInput = document.getElementById('price');
 
 const editId = getIdFromUrl();
-let editing = null;      // the hotel being edited (null in add mode)
-let currentImage = '';   // image path or data URL that will be saved
+let editing = null;
+let currentImage = '';
 
-/* problems are shown in the footer, where they are always in view */
 function showError(message) {
   showFooterMessage(message, { type: 'error', duration: 8000 });
 }
 
-/* Shrink the chosen picture so several hotels fit in browser storage */
 function resizeImage(file, maxSize, quality) {
   return new Promise(function (resolve, reject) {
     const url = URL.createObjectURL(file);
@@ -33,7 +27,7 @@ function resizeImage(file, maxSize, quality) {
       canvas.width = Math.round(img.width * scale);
       canvas.height = Math.round(img.height * scale);
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#ffffff';              // PNGs with transparency become white, not black
+      ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
@@ -122,7 +116,7 @@ form.addEventListener('submit', function (event) {
     const index = list.findIndex(function (h) { return h.id === editing.id; });
     if (index >= 0) list[index] = hotel; else list.unshift(hotel);
   } else {
-    list.unshift(hotel);   // newest hotel appears first
+    list.unshift(hotel);
   }
 
   if (!saveHotels(list)) {
@@ -130,7 +124,6 @@ form.addEventListener('submit', function (event) {
     return;
   }
 
-  /* the home page shows this in its footer */
   setFlash({
     type: 'success',
     title: editing ? 'Updated successfully' : 'Added successfully',

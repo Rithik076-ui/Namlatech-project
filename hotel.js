@@ -1,5 +1,3 @@
-/* hotel.js - details page, opened as hotel.html?id=<id> */
-
 const main = document.getElementById('details');
 const hotel = getHotelById(getIdFromUrl());
 
@@ -63,10 +61,9 @@ function render(h) {
   edit.href = 'edithotel.html?id=' + encodeURIComponent(h.id);
   const del = el('button', 'delete', 'Delete');
   del.type = 'button';
-  /* no popup: delete straight away, then the home page footer says "Deleted ... Undo" */
   del.addEventListener('click', function () {
     const removed = removeHotel(h.id);
-    if (!removed) return;   // removeHotel already showed the error in the footer
+    if (!removed) return;
     setFlash({ type: 'success', title: 'Deleted successfully', text: '“' + h.title + '” has been removed.', undo: removed });
     window.location.href = 'index.html';
   });

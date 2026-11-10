@@ -1,8 +1,3 @@
-/* Pop-up at the bottom of the page - replaces the browser's own pop-up boxes.
-   Used by index.html, hotel.html and edithotel.html (see showFooterMessage in common.js).
-   Green = success (Deleted / Restored / Added / Updated), red = a problem, dark = plain message. */
-
-/* keep the last cards from hiding behind the pop-up */
 body {
     padding-bottom: 90px;
 }

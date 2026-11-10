@@ -1,10 +1,6 @@
-/* common.js - data layer + small helpers shared by every page.
-   Hotels are saved in the browser's localStorage, so add / edit / delete
-   survive a page refresh. Load this file BEFORE the page's own script. */
-
-const STORAGE_KEY = 'hotelBooking.hotels.v1';   // same key as before, so saved hotels are kept
-const FLASH_KEY = 'hotelBooking.flash';         // one-time footer message passed to the next page
-const TAB_PREFIX = 'hotelBooking:';             // marks our data inside window.name (see below)
+const STORAGE_KEY = 'hotelBooking.hotels.v1';
+const FLASH_KEY = 'hotelBooking.flash';
+const TAB_PREFIX = 'hotelBooking:';
 
 const STORAGE_NOTICE =
   'Your browser is not saving changes permanently (storage is blocked or full), so they only last ' +
@@ -12,15 +8,13 @@ const STORAGE_NOTICE =
 
 const SAVE_FAILED_MESSAGE = 'Could not save that change - browser storage is blocked or full.';
 
-let storageNotice = '';   // set when the browser is not keeping localStorage
+let storageNotice = '';
 
 const PLACEHOLDER_IMG =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E" +
   "%3Crect width='800' height='600' fill='%23eeeeee'/%3E" +
   "%3Ctext x='400' y='305' text-anchor='middle' font-family='Arial,sans-serif' font-size='28' fill='%23666666'%3ENo image%3C/text%3E%3C/svg%3E";
 
-/* The hotels that were hard-coded in the old index.html.
-   They are copied into storage the first time the site is opened. */
 const SEED_HOTELS = [
   {
     id: 'seed-1',
@@ -96,13 +90,6 @@ const SEED_HOTELS = [
   }
 ];
 
-/* ---------- storage ----------
-   Every save goes to localStorage AND is mirrored into window.name.
-   localStorage is the real storage. window.name only matters when the browser
-   blocks localStorage or throws it away on refresh (some file:// pages and
-   embedded previews do): it survives a refresh in the same tab, so a deleted
-   hotel stays deleted, and the footer tells the person what is going on.
-   Each save carries a timestamp, and the newest copy wins when the two differ. */
 
 function readLocal() {
   try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
@@ -111,7 +98,7 @@ function readLocal() {
 function writeLocal(raw) {
   try {
     localStorage.setItem(STORAGE_KEY, raw);
-    return localStorage.getItem(STORAGE_KEY) === raw;   // make sure it really stuck
+    return localStorage.getItem(STORAGE_KEY) === raw;
   } catch (e) {
     return false;
   }
@@ -128,7 +115,7 @@ function readTab() {
 
 function writeTab(raw) {
   try {
-    if (window.name && window.name.indexOf(TAB_PREFIX) !== 0) return false;   // belongs to something else
+    if (window.name && window.name.indexOf(TAB_PREFIX) !== 0) return false;
     window.name = TAB_PREFIX + raw;
     return true;
   } catch (e) {
@@ -136,7 +123,7 @@ function writeTab(raw) {
   }
 }
 
-/* accepts the current format {savedAt, hotels} and the older plain array */
+
 function parseStored(raw) {
   if (!raw) return null;
   try {
@@ -154,21 +141,19 @@ function loadHotels() {
   const local = parseStored(readLocal());
   const tab = parseStored(tabRaw);
 
-  /* the tab holds a newer copy than localStorage: the browser did not keep our last save */
+ 
   if (tab && (!local || tab.savedAt > local.savedAt)) {
     storageNotice = STORAGE_NOTICE;
-    writeLocal(tabRaw);   // try to put the copy back
+    writeLocal(tabRaw);
     return tab.hotels;
   }
   if (local) return local.hotels;
 
-  /* nothing saved yet: first visit, copy the sample hotels in */
   const seeded = SEED_HOTELS.map(function (h) { return Object.assign({}, h); });
   saveHotels(seeded);
   return seeded;
 }
 
-/* returns true when the list was kept (permanently, or at least for this tab) */
 function saveHotels(list) {
   const raw = JSON.stringify({ v: 2, savedAt: Date.now(), hotels: list });
   const savedLocal = writeLocal(raw);
@@ -186,8 +171,6 @@ function newHotelId() {
   return 'h' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
-/* Delete a hotel. Returns {hotel, index} so the delete can be undone,
-   or null when nothing was deleted (an error is shown in the footer). */
 function removeHotel(id) {
   const list = loadHotels();
   const index = list.findIndex(function (h) { return h.id === id; });
@@ -202,7 +185,6 @@ function removeHotel(id) {
   return { hotel: hotel, index: index };
 }
 
-/* Put a deleted hotel back where it was */
 function restoreHotel(hotel, index) {
   const list = loadHotels();
   if (list.some(function (h) { return h.id === hotel.id; })) return true;
@@ -210,7 +192,6 @@ function restoreHotel(hotel, index) {
   return saveHotels(list);
 }
 
-/* ---------- footer messages (replace browser popups) ---------- */
 
 let footerTimer = null;
 
@@ -220,13 +201,7 @@ function hideFooterMessage() {
   clearTimeout(footerTimer);
 }
 
-/* The pop-up at the bottom of the page (it replaces the browser's own pop-up boxes).
-   options:
-     type         'success' (green, with a check mark) or 'error' (red, with !); leave out for a plain dark message
-     title        bold first line, e.g. 'Deleted successfully'
-     actionLabel + onAction   a button such as Undo
-     duration     ms before it hides (default 6000)     sticky   never auto-hide
-   If the browser is not saving changes, that warning is added and the pop-up stays. */
+
 function showFooterMessage(text, options) {
   const opts = options || {};
   let bar = document.getElementById('footer-msg');
@@ -239,13 +214,13 @@ function showFooterMessage(text, options) {
   }
 
   const message = text || storageNotice;
-  const type = !text ? 'error' : (opts.type || '');   // '' = plain, 'success' = green, 'error' = red
+  const type = !text ? 'error' : (opts.type || '');
   bar.className = 'footer-msg' + (type ? ' ' + type : '');
   bar.replaceChildren();
 
   const row = el('div', 'footer-row');
 
-  /* round icon: a check mark for success, ! for a problem */
+
   if (type === 'success' || type === 'error') {
     const icon = el('span', 'footer-icon', type === 'success' ? '✓' : '!');
     icon.setAttribute('aria-hidden', 'true');
@@ -283,13 +258,11 @@ function showFooterMessage(text, options) {
   }
 }
 
-/* Call once when a page loads: shows the warning if the browser is not keeping saved data */
 function checkStorage() {
-  loadHotels();   // loading is what detects the problem
+  loadHotels();
   if (storageNotice) showFooterMessage('');
 }
 
-/* A message that should appear in the footer of the NEXT page (e.g. after Save or Delete) */
 function setFlash(flash) {
   try {
     sessionStorage.setItem(FLASH_KEY, JSON.stringify(flash));
@@ -310,7 +283,6 @@ function takeFlash() {
   }
 }
 
-/* ---------- helpers ---------- */
 
 function getIdFromUrl() {
   return new URLSearchParams(window.location.search).get('id');
@@ -327,7 +299,6 @@ function hasCoords(hotel) {
          Number.isFinite(Number(hotel.longitude));
 }
 
-/* create an element; text is added with textContent so user input is never run as HTML */
 function el(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -335,7 +306,6 @@ function el(tag, className, text) {
   return node;
 }
 
-/* set an image source, falling back to a grey placeholder if the file is missing */
 function setImage(img, src) {
   img.onerror = function () {
     img.onerror = null;

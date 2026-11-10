@@ -1,4 +1,3 @@
-/* Mobile first: 1 column, then 2 / 3 / 4 as the screen gets wider */
 .body-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -23,7 +22,6 @@
     }
 }
 
-/* ---------- hotel card ---------- */
 
 .hotels-preview {
     display: flex;
@@ -63,7 +61,7 @@
     line-height: 1.3;
     color: darkcyan;
     text-decoration: none;
-    overflow-wrap: anywhere;   /* a very long word wraps instead of running out of the card */
+    overflow-wrap: anywhere;
 }
 
 .hotel-title:hover {
@@ -85,7 +83,6 @@
     overflow: hidden;
 }
 
-/* Edit / Delete sit at the bottom of every card, so cards line up */
 .buttons {
     display: flex;
     gap: 10px;

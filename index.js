@@ -1,11 +1,9 @@
-/* index.js - home page: draws the hotel cards, live search, price filter, delete with Undo */
 
 const grid = document.getElementById('hotel-grid');
 const emptyMsg = document.getElementById('empty-msg');
 const searchInput = document.getElementById('search-bar');
 const searchButton = document.getElementById('search-button');
 
-/* price filter */
 const filterButton = document.getElementById('filter-button');
 const filterPanel = document.getElementById('filter-panel');
 const minInput = document.getElementById('min-price');
@@ -16,8 +14,8 @@ const filterSummary = document.getElementById('filter-summary');
 const filterSummaryText = document.getElementById('filter-summary-text');
 const filterSummaryClear = document.getElementById('filter-summary-clear');
 
-let minPrice = null;   // applied lowest price per night  (null = no limit)
-let maxPrice = null;   // applied highest price per night (null = no limit)
+let minPrice = null;
+let maxPrice = null;
 
 function buildCard(hotel) {
   const detailsUrl = 'hotel.html?id=' + encodeURIComponent(hotel.id);
@@ -25,7 +23,7 @@ function buildCard(hotel) {
 
   const card = el('div', 'hotels-preview');
 
-  /* clicking the picture opens the details page */
+
   const imgLink = el('a', 'img-link');
   imgLink.href = detailsUrl;
   imgLink.setAttribute('aria-label', 'View details of ' + hotel.title);
@@ -37,7 +35,7 @@ function buildCard(hotel) {
 
   const info = el('div', 'hotel-info');
 
-  /* clicking the title opens the details page too */
+
   const title = el('a', 'hotel-title', hotel.title);
   title.href = detailsUrl;
 
@@ -61,13 +59,11 @@ function buildCard(hotel) {
   return card;
 }
 
-/* ---------- price filter ---------- */
 
 function priceFilterActive() {
   return minPrice !== null || maxPrice !== null;
 }
 
-/* "Rs 5,000 - Rs 10,000", "Rs 5,000 and above" or "up to Rs 10,000" */
 function priceRangeText() {
   if (minPrice !== null && maxPrice !== null) {
     return formatPrice(minPrice) + ' – ' + formatPrice(maxPrice);
@@ -76,7 +72,6 @@ function priceRangeText() {
   return 'up to ' + formatPrice(maxPrice);
 }
 
-/* an empty box means "no limit" (null); anything that is not a number of 0 or more is invalid (undefined) */
 function parsePrice(text) {
   const t = String(text).trim();
   if (t === '') return null;
@@ -92,7 +87,6 @@ function noMatchText(typed) {
   return 'No hotels match “' + typed + '”.';
 }
 
-/* the red button + the "Price per night: ..." line above the cards */
 function renderFilterState(shownCount, totalCount) {
   const active = priceFilterActive();
   filterButton.classList.toggle('active', active);
@@ -109,7 +103,6 @@ function render() {
   const query = searchInput.value.trim().toLowerCase();
   const all = loadHotels();
 
-  /* a hotel is shown when it matches the title search AND the price range */
   const shown = all.filter(function (h) {
     if (query && !String(h.title).toLowerCase().includes(query)) return false;
     if (priceFilterActive()) {
@@ -140,7 +133,6 @@ function openFilter() {
   minInput.value = minPrice === null ? '' : minPrice;
   maxInput.value = maxPrice === null ? '' : maxPrice;
 
-  /* hint: the real price range of the saved hotels */
   const prices = loadHotels()
     .map(function (h) { return Number(h.price); })
     .filter(function (n) { return Number.isFinite(n); });
@@ -170,7 +162,6 @@ filterButton.addEventListener('click', function () {
   if (filterPanel.hidden) openFilter(); else closeFilter(false);
 });
 
-/* Apply (or Enter in a box) */
 filterPanel.addEventListener('submit', function (event) {
   event.preventDefault();
 
@@ -178,7 +169,6 @@ filterPanel.addEventListener('submit', function (event) {
   const max = parsePrice(maxInput.value);
   const typedJunk = minInput.validity.badInput || maxInput.validity.badInput;
 
-  /* problems show in the footer, like every other message on the site (no popups) */
   if (typedJunk || min === undefined || max === undefined) {
     showFooterMessage('Enter prices as numbers, 0 or more.', { type: 'error' });
     return;
@@ -194,7 +184,6 @@ filterPanel.addEventListener('submit', function (event) {
   render();
 });
 
-/* Clear inside the panel: remove the filter, keep the panel open for a new range */
 filterClear.addEventListener('click', function () {
   minInput.value = '';
   maxInput.value = '';
@@ -202,10 +191,8 @@ filterClear.addEventListener('click', function () {
   minInput.focus();
 });
 
-/* "Clear filter" next to the result count */
 filterSummaryClear.addEventListener('click', clearPriceFilter);
 
-/* click outside the panel, or press Escape, to close it */
 document.addEventListener('click', function (event) {
   if (filterPanel.hidden) return;
   if (filterPanel.contains(event.target) || filterButton.contains(event.target)) return;
@@ -216,7 +203,6 @@ document.addEventListener('keydown', function (event) {
   if (event.key === 'Escape' && !filterPanel.hidden) closeFilter(true);
 });
 
-/* the green success popup that follows a delete, with an Undo button */
 function showDeleted(removed) {
   showFooterMessage('“' + removed.hotel.title + '” has been removed.', {
     type: 'success',
@@ -239,14 +225,13 @@ function undoRemove(removed) {
   }
 }
 
-/* one listener handles every Delete button, including ones drawn later.
-   No popup: the hotel is deleted straight away and the footer offers Undo. */
+
 grid.addEventListener('click', function (event) {
   const button = event.target.closest('.delete');
   if (!button) return;
 
   const removed = removeHotel(button.dataset.id);
-  if (!removed) return;   // removeHotel already showed the error in the footer
+  if (!removed) return;
 
   render();
   showDeleted(removed);
@@ -257,7 +242,6 @@ searchButton.addEventListener('click', render);
 
 render();
 
-/* a message left by the previous page (Added / Updated / Deleted ...) */
 const flash = takeFlash();
 if (flash) {
   const undo = flash.undo;

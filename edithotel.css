@@ -75,7 +75,6 @@ label {
     padding: 10px;
 }
 
-/* ---------- text fields (one shared style) ---------- */
 
 .field {
     display: block;
@@ -107,7 +106,6 @@ label {
     max-width: 300px;
 }
 
-/* ---------- buttons + messages ---------- */
 
 .form-buttons {
     margin: 30px 0 10px;

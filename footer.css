@@ -1,0 +1,136 @@
+/* Pop-up at the bottom of the page - replaces the browser's own pop-up boxes.
+   Used by index.html, hotel.html and edithotel.html (see showFooterMessage in common.js).
+   Green = success (Deleted / Restored / Added / Updated), red = a problem, dark = plain message. */
+
+/* keep the last cards from hiding behind the pop-up */
+body {
+    padding-bottom: 90px;
+}
+
+.footer-msg {
+    position: fixed;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    z-index: 5;
+    width: min(520px, calc(100% - 24px));
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    background-color: #222;
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    animation: footer-pop-in 0.25s ease-out;
+}
+
+@keyframes footer-pop-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .footer-msg {
+        animation: none;
+    }
+}
+
+.footer-msg[hidden] {
+    display: none !important;
+}
+
+.footer-msg.success {
+    background-color: #14693f;
+}
+
+.footer-msg.error {
+    background-color: #7a0c24;
+}
+
+.footer-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: white;
+    color: #14693f;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.footer-msg.error .footer-icon {
+    color: #7a0c24;
+}
+
+.footer-body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-title {
+    font-size: 15px;
+}
+
+.footer-text {
+    overflow-wrap: anywhere;
+}
+
+.footer-action {
+    flex-shrink: 0;
+    padding: 4px 14px;
+    background: none;
+    border: 2px solid white;
+    border-radius: 16px;
+    color: white;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.footer-action:hover {
+    background-color: white;
+    color: #222;
+}
+
+.footer-msg.success .footer-action:hover {
+    color: #14693f;
+}
+
+.footer-close {
+    flex-shrink: 0;
+    padding: 0 4px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.footer-notice {
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffd7df;
+}

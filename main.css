@@ -1,0 +1,380 @@
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+body {
+    margin: 0;
+    padding: 70px 12px 20px;
+    font-family: Roboto, Arial, sans-serif;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+/* ---------- header ---------- */
+
+.header {
+    height: 55px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-color: darkcyan;
+    border-bottom: 1px solid black;
+}
+
+.leftsec {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: black;
+    text-decoration: none;
+}
+
+.header-img {
+    height: 45px;
+    border-radius: 26px;
+    margin: 0 10px;
+}
+
+.header-title {
+    font-style: italic;
+    font-weight: 700;
+}
+
+.header-title:hover {
+    color: #dc143c;
+}
+
+.middlesection {
+    flex: 1;
+    min-width: 0;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    position: relative;   /* the price filter panel opens under this */
+}
+
+.search-bar {
+    flex: 1;
+    min-width: 0;
+    height: 38px;
+    padding-left: 10px;
+    font-size: 16px;
+    border: 1px solid white;
+}
+
+.search-button {
+    display: flex;
+    align-items: center;
+    height: 38px;
+    padding: 0 4px;
+    border: 1px solid white;
+    background-color: white;
+    cursor: pointer;
+}
+
+.searchimg {
+    height: 28px;
+}
+
+/* ---------- price filter (button next to Search + dropdown panel) ---------- */
+
+.filter-button {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    margin-left: 8px;
+    padding: 0 14px;
+    background-color: #222;
+    color: white;
+    border: 1px solid #222;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filter-button:hover {
+    background-color: #000;
+}
+
+/* red while a price range is applied */
+.filter-button.active {
+    background-color: #dc143c;
+    border-color: #dc143c;
+}
+
+.filter-button.active:hover {
+    background-color: #b01030;
+}
+
+.filter-button:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+.filter-panel {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    background-color: white;
+    color: #222;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.filter-title {
+    margin: 0;
+    font-weight: 700;
+}
+
+.filter-fields {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.filter-field {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+    color: #444;
+}
+
+.filter-field input {
+    width: 100%;
+    height: 38px;
+    padding: 0 10px;
+    font-size: 16px;
+    border: 2px solid gray;
+    border-radius: 6px;
+}
+
+.filter-field input:focus {
+    outline: 2px solid darkcyan;
+    border-color: darkcyan;
+}
+
+.filter-dash {
+    padding-bottom: 8px;
+    color: #666;
+}
+
+.filter-hint {
+    margin: 0;
+    font-size: 13px;
+    color: #555;
+}
+
+.filter-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.filter-clear,
+.filter-apply {
+    height: 36px;
+    padding: 0 18px;
+    border-radius: 18px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.filter-clear {
+    background-color: white;
+    border: 2px solid gray;
+    color: #222;
+}
+
+.filter-clear:hover {
+    background-color: #eee;
+}
+
+.filter-apply {
+    background-color: darkcyan;
+    border: 2px solid darkcyan;
+    color: white;
+    font-weight: 700;
+}
+
+.filter-apply:hover {
+    background-color: #006b6b;
+}
+
+/* the line above the cards: "Price per night: ... - 3 of 8 hotels  [Clear filter]" */
+.filter-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin: 4px 0 12px;
+    font-size: 14px;
+    color: #333;
+}
+
+.filter-summary-clear {
+    padding: 4px 12px;
+    background-color: #e5e5e5;
+    color: #222;
+    border: none;
+    border-radius: 14px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.filter-summary-clear:hover {
+    background-color: #c9c9c9;
+}
+
+.rightsec {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+.addhotel {
+    display: inline-flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+.addhotel:hover {
+    background-color: #dc143c;
+    color: white;
+}
+
+.addhotel:active {
+    opacity: 0.7;
+}
+
+/* ---------- shared Edit / Delete buttons (home page + details page) ---------- */
+
+.edit,
+.delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.edit {
+    background-color: #dc143c;
+    color: white;
+}
+
+.edit:hover {
+    background-color: #b01030;
+}
+
+.delete {
+    background-color: #e5e5e5;
+    color: #222;
+}
+
+.delete:hover {
+    background-color: #c9c9c9;
+}
+
+.empty-msg {
+    margin-top: 40px;
+    text-align: center;
+    color: #555;
+}
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 600px) {
+    .header-title {
+        display: none;
+    }
+
+    .header-img {
+        margin: 0 8px;
+    }
+
+    /* the filter button keeps just its icon, and the panel spans the screen */
+    .filter-label {
+        display: none;
+    }
+
+    .filter-button {
+        margin-left: 6px;
+        padding: 0 10px;
+    }
+
+    .filter-panel {
+        position: fixed;
+        top: 62px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+    }
+}
+
+/* very narrow phones: tighten the header so the search box keeps some room */
+@media (max-width: 400px) {
+    .header {
+        gap: 8px;
+    }
+
+    .header-img {
+        height: 38px;
+        margin: 0 6px;
+    }
+
+    .rightsec {
+        margin-right: 6px;
+    }
+
+    .addhotel {
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    .filter-button {
+        margin-left: 4px;
+        padding: 0 9px;
+    }
+}
